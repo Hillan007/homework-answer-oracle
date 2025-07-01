@@ -1,9 +1,11 @@
 
-import { useState } from "react";
-import { Upload, Camera, BookOpen, CheckCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Upload, Camera, BookOpen, CheckCircle, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import ImageUpload from "@/components/ImageUpload";
 import AnswerDisplay from "@/components/AnswerDisplay";
 
@@ -12,6 +14,14 @@ const Index = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [answer, setAnswer] = useState<string | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user, loading, signOut } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/auth");
+    }
+  }, [user, loading, navigate]);
 
   const handleImageUpload = (imageUrl: string) => {
     setUploadedImage(imageUrl);
@@ -53,16 +63,61 @@ const Index = () => {
     console.log("Session reset");
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "You have been logged out.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error signing out",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen gradient-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will redirect to auth page
+  }
+
   return (
     <div className="min-h-screen gradient-background">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
+        {/* Header with User Info */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <BookOpen className="h-12 w-12 text-primary mr-3" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              Homework Ally
-            </h1>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <BookOpen className="h-12 w-12 text-primary mr-3" />
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                Homework Ally
+              </h1>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center text-muted-foreground">
+                <User className="h-4 w-4 mr-2" />
+                <span className="text-sm">{user.email}</span>
+              </div>
+              <Button
+                onClick={handleSignOut}
+                variant="outline"
+                size="sm"
+                className="flex items-center"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
+            </div>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Help your child succeed by uploading photos of their homework questions and getting step-by-step solutions
