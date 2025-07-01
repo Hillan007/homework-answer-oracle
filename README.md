@@ -20,6 +20,7 @@
 -  Secure parent authentication with Supabase Auth  
 -  Clean storage using real-time Supabase DB  
 -  Hosted live on [Vercel](https://vercel.com)
+-  Pitch deck is on Gama: https://gamma.app/docs/Homework-Ally-The-Simple-Way-to-Submit-and-Structure-Homework-9mol2mg7qj7rmvr
 
 ---
 
