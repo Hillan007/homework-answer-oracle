@@ -1,73 +1,43 @@
-# Welcome to your Lovable project
+#  Homework-Ally
 
-## Project info
+> A parent-friendly assignment helper that streamlines how questions and answers are uploaded, verified, and stored. Powered by AI and built with simplicity at its core.
 
-**URL**: https://lovable.dev/projects/cd4ead89-066b-4360-aa02-18a6e8f20be5
+ **Live Demo**: [https://homework-answer-oracle.vercel.app](https://homework-answer-oracle.vercel.app)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## What is Homework-Ally?
 
-**Use Lovable**
+**Homework-Ally** is a web app built with [Lovable AI](https://lovable.ai) that helps parents easily upload and structure homework questions and answers—whether typed or scanned. It validates entries, stores them cleanly using Supabase, and optionally integrates with AI for formatting and feedback.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/cd4ead89-066b-4360-aa02-18a6e8f20be5) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+##  Features
 
-**Use your preferred IDE**
+-  Upload text or image-based homework submissions  
+-  Built-in validation for clean Q&A formatting  
+-  Optional AI formatting or feedback (e.g. ChatGPT)  
+-  Secure parent authentication with Supabase Auth  
+-  Clean storage using real-time Supabase DB  
+-  Hosted live on [Vercel](https://vercel.com)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🛠️ Tech Stack
 
-Follow these steps:
+| Layer           | Technology Used                |
+|----------------|---------------------------------|
+| Frontend       | React + Vite (via Lovable AI)   |
+| Backend        | Supabase (Postgres, Auth, Storage) |
+| Hosting        | Vercel                          |
+| AI Integration | ChatGPT / Claude (optional)     |
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🧰 Getting Started
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. **Clone the Repo**
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/cd4ead89-066b-4360-aa02-18a6e8f20be5) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+   ```bash
+   git clone https://github.com/Hillan007/homework-answer-oracle.git
+   cd homework-ally
