@@ -24,21 +24,21 @@ serve(async (req) => {
     // Create Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      global: {
+        headers: { Authorization: req.headers.get('Authorization')! },
+      },
+    });
 
-    // Get user from auth header
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      throw new Error('No authorization header');
-    }
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser(
-      authHeader.replace('Bearer ', '')
-    );
+    // Get user from the request
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
+      console.error('Auth error:', authError);
       throw new Error('Unauthorized');
     }
+
+    console.log('User authenticated:', user.id);
 
     // Prepare messages for OpenAI
     const messages = [
@@ -86,6 +86,8 @@ Format your response with clear sections and bullet points where helpful.`
       throw new Error('No question provided');
     }
 
+    console.log('Calling OpenAI API...');
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -100,12 +102,15 @@ Format your response with clear sections and bullet points where helpful.`
       }),
     });
 
-    const data = await response.json();
-    
     if (!response.ok) {
-      throw new Error(data.error?.message || 'OpenAI API error');
+      const errorData = await response.json();
+      console.error('OpenAI API error:', errorData);
+      throw new Error(errorData.error?.message || 'OpenAI API error');
     }
 
+    const data = await response.json();
+    console.log('OpenAI response received');
+    
     const solution = data.choices[0].message.content;
 
     // Save the homework session to database
@@ -124,6 +129,8 @@ Format your response with clear sections and bullet points where helpful.`
       console.error('Database error:', dbError);
       throw new Error('Failed to save homework session');
     }
+
+    console.log('Session saved successfully');
 
     return new Response(JSON.stringify({ 
       solution,
