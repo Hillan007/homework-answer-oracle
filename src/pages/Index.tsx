@@ -1,21 +1,26 @@
 
 import { useState, useEffect } from "react";
-import { Upload, Camera, BookOpen, CheckCircle, User, LogOut } from "lucide-react";
+import { BookOpen, User, LogOut, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import ImageUpload from "@/components/ImageUpload";
+import QuestionInput from "@/components/QuestionInput";
 import AnswerDisplay from "@/components/AnswerDisplay";
+import { useHomeworkSolver } from "@/hooks/useHomeworkSolver";
 
 const Index = () => {
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [answer, setAnswer] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user, loading, signOut } = useAuth();
+  const {
+    solveProblem,
+    resetSession,
+    isProcessing,
+    solution,
+    sessionId
+  } = useHomeworkSolver();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -23,44 +28,8 @@ const Index = () => {
     }
   }, [user, loading, navigate]);
 
-  const handleImageUpload = (imageUrl: string) => {
-    setUploadedImage(imageUrl);
-    setAnswer(null);
-    console.log("Image uploaded:", imageUrl);
-  };
-
-  const processHomework = async () => {
-    if (!uploadedImage) {
-      toast({
-        title: "No image uploaded",
-        description: "Please upload an image of the homework question first.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsProcessing(true);
-    console.log("Processing homework question...");
-
-    // Simulate AI processing - in a real app, this would call an AI service
-    setTimeout(() => {
-      const sampleAnswer = "Based on the image, here's a step-by-step solution:\n\n1. First, identify what type of problem this is\n2. Break down the question into smaller parts\n3. Apply the relevant mathematical or conceptual principles\n4. Show your work clearly\n5. Double-check your answer\n\nThis approach helps your child understand not just the answer, but the thinking process behind it.";
-      setAnswer(sampleAnswer);
-      setIsProcessing(false);
-      console.log("Processing complete");
-      
-      toast({
-        title: "Question processed!",
-        description: "Your homework solution is ready.",
-      });
-    }, 2000);
-  };
-
-  const resetSession = () => {
-    setUploadedImage(null);
-    setAnswer(null);
-    setIsProcessing(false);
-    console.log("Session reset");
+  const handleQuestionSubmit = async (questionText?: string, imageUrl?: string) => {
+    await solveProblem(questionText, imageUrl);
   };
 
   const handleSignOut = async () => {
@@ -88,7 +57,7 @@ const Index = () => {
   }
 
   if (!user) {
-    return null; // Will redirect to auth page
+    return null;
   }
 
   return (
@@ -120,79 +89,45 @@ const Index = () => {
             </div>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Help your child succeed by uploading photos of their homework questions and getting step-by-step solutions
+            Get step-by-step AI-powered solutions to your homework questions. Type your question or upload an image!
           </p>
         </div>
 
         {/* Main Content */}
         <div className="max-w-4xl mx-auto space-y-8">
-          {/* Upload Section */}
-          <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Camera className="h-5 w-5 mr-2 text-primary" />
-                Upload Homework Question
-              </CardTitle>
-              <CardDescription>
-                Take a photo or upload an image of your child's homework question
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ImageUpload onImageUpload={handleImageUpload} />
-            </CardContent>
-          </Card>
-
-          {/* Processing Button */}
-          {uploadedImage && (
-            <div className="text-center">
-              <Button
-                onClick={processHomework}
-                disabled={isProcessing}
-                size="lg"
-                className="gradient-primary text-white hover:opacity-90 transition-opacity px-8 py-3"
-              >
-                {isProcessing ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Processing Question...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="h-5 w-5 mr-2" />
-                    Get Solution
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
+          {/* Question Input */}
+          <QuestionInput 
+            onQuestionSubmit={handleQuestionSubmit}
+            isProcessing={isProcessing}
+          />
 
           {/* Answer Display */}
-          {answer && (
+          {solution && (
             <AnswerDisplay 
-              answer={answer} 
+              answer={solution} 
               onReset={resetSession}
-              imageUrl={uploadedImage}
+              imageUrl={null}
             />
           )}
 
           {/* Features Section */}
           <div className="grid md:grid-cols-3 gap-6 mt-16">
             <Card className="text-center p-6 bg-white/60 backdrop-blur-sm border-0 shadow-md">
-              <Upload className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Easy Upload</h3>
-              <p className="text-muted-foreground">Simply take a photo or upload an image of any homework question</p>
+              <BookOpen className="h-12 w-12 text-primary mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">AI-Powered Solutions</h3>
+              <p className="text-muted-foreground">Get detailed step-by-step explanations powered by advanced AI</p>
             </Card>
             
             <Card className="text-center p-6 bg-white/60 backdrop-blur-sm border-0 shadow-md">
-              <BookOpen className="h-12 w-12 text-accent mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Step-by-Step</h3>
-              <p className="text-muted-foreground">Get detailed explanations that help your child learn the process</p>
+              <History className="h-12 w-12 text-accent mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Multiple Input Methods</h3>
+              <p className="text-muted-foreground">Type questions directly or upload images - we handle both!</p>
             </Card>
             
             <Card className="text-center p-6 bg-white/60 backdrop-blur-sm border-0 shadow-md">
-              <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Parent-Friendly</h3>
-              <p className="text-muted-foreground">Designed to help parents confidently support their children's learning</p>
+              <User className="h-12 w-12 text-green-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">Learning Focused</h3>
+              <p className="text-muted-foreground">Explanations designed to help you understand, not just get answers</p>
             </Card>
           </div>
         </div>
