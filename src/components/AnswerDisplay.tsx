@@ -18,7 +18,7 @@ const AnswerDisplay = ({ answer, onReset, imageUrl }: AnswerDisplayProps) => {
           Step-by-Step Solution
         </CardTitle>
         <CardDescription>
-          Here's how to help your child understand and solve this problem
+          Here's your detailed AI-powered solution
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -38,7 +38,7 @@ const AnswerDisplay = ({ answer, onReset, imageUrl }: AnswerDisplayProps) => {
 
         {/* Solution */}
         <div>
-          <h4 className="font-medium text-gray-700 mb-3">Solution & Explanation:</h4>
+          <h4 className="font-medium text-gray-700 mb-3">AI Solution & Explanation:</h4>
           <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 border border-green-100">
             <div className="whitespace-pre-line text-gray-700 leading-relaxed">
               {answer}
@@ -46,14 +46,14 @@ const AnswerDisplay = ({ answer, onReset, imageUrl }: AnswerDisplayProps) => {
           </div>
         </div>
 
-        {/* Teaching Tips */}
+        {/* Learning Tips */}
         <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-          <h5 className="font-medium text-yellow-800 mb-2">💡 Parent Tips:</h5>
+          <h5 className="font-medium text-yellow-800 mb-2">💡 Study Tips:</h5>
           <ul className="text-sm text-yellow-700 space-y-1">
-            <li>• Work through each step together with your child</li>
-            <li>• Ask them to explain their thinking at each stage</li>
-            <li>• Encourage them to check their work</li>
-            <li>• Praise the process, not just the correct answer</li>
+            <li>• Review each step to understand the methodology</li>
+            <li>• Try solving similar problems using the same approach</li>
+            <li>• Make note of key concepts and formulas used</li>
+            <li>• Practice explaining the solution in your own words</li>
           </ul>
         </div>
 
@@ -65,7 +65,7 @@ const AnswerDisplay = ({ answer, onReset, imageUrl }: AnswerDisplayProps) => {
             className="flex-1"
           >
             <RotateCcw className="h-4 w-4 mr-2" />
-            Try Another Question
+            Ask Another Question
           </Button>
         </div>
       </CardContent>

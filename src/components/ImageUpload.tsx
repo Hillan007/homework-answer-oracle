@@ -101,7 +101,7 @@ const ImageUpload = ({ onImageUpload }: ImageUploadProps) => {
           <X className="h-4 w-4" />
         </Button>
         <p className="text-sm text-muted-foreground mt-2 text-center">
-          Image uploaded successfully! Click "Get Solution" to process the question.
+          Image uploaded successfully! Click "Get AI Solution" to process the question.
         </p>
       </div>
     );
