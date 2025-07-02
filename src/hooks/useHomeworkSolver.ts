@@ -7,6 +7,7 @@ export const useHomeworkSolver = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [solution, setSolution] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
   const solveProblem = async (questionText?: string, imageUrl?: string) => {
@@ -22,8 +23,11 @@ export const useHomeworkSolver = () => {
     setIsProcessing(true);
     setSolution(null);
     setSessionId(null);
+    setCurrentImageUrl(imageUrl || null);
 
     try {
+      console.log("Submitting to AI:", { questionText, imageUrl: imageUrl ? "Image provided" : "No image" });
+      
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
@@ -37,7 +41,10 @@ export const useHomeworkSolver = () => {
         }
       });
 
+      console.log("AI Response:", response);
+
       if (response.error) {
+        console.error("Supabase function error:", response.error);
         throw new Error(response.error.message || "Failed to solve homework question");
       }
 
@@ -66,6 +73,7 @@ export const useHomeworkSolver = () => {
   const resetSession = () => {
     setSolution(null);
     setSessionId(null);
+    setCurrentImageUrl(null);
   };
 
   return {
@@ -73,6 +81,7 @@ export const useHomeworkSolver = () => {
     resetSession,
     isProcessing,
     solution,
-    sessionId
+    sessionId,
+    currentImageUrl
   };
 };

@@ -19,7 +19,8 @@ const Index = () => {
     resetSession,
     isProcessing,
     solution,
-    sessionId
+    sessionId,
+    currentImageUrl
   } = useHomeworkSolver();
 
   useEffect(() => {
@@ -29,6 +30,7 @@ const Index = () => {
   }, [user, loading, navigate]);
 
   const handleQuestionSubmit = async (questionText?: string, imageUrl?: string) => {
+    console.log("Question submitted:", { questionText, imageUrl: imageUrl ? "Image provided" : "No image" });
     await solveProblem(questionText, imageUrl);
   };
 
@@ -106,7 +108,7 @@ const Index = () => {
             <AnswerDisplay 
               answer={solution} 
               onReset={resetSession}
-              imageUrl={null}
+              imageUrl={currentImageUrl}
             />
           )}
 
