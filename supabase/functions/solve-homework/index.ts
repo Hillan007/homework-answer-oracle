@@ -15,10 +15,10 @@ serve(async (req) => {
 
   try {
     const { questionText, imageUrl } = await req.json();
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    const xaiApiKey = Deno.env.get('XAI_API_KEY');
     
-    if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
+    if (!xaiApiKey) {
+      throw new Error('Grok API key not configured');
     }
 
     // Create Supabase client
@@ -86,30 +86,30 @@ Format your response with clear sections and bullet points where helpful.`
       throw new Error('No question provided');
     }
 
-    console.log('Calling OpenAI API...');
+    console.log('Calling Grok API...');
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
+        'Authorization': `Bearer ${xaiApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: 'grok-beta',
         messages: messages,
-        max_tokens: 1500,
+        max_tokens: 2000,
         temperature: 0.7,
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('OpenAI API error:', errorData);
-      throw new Error(errorData.error?.message || 'OpenAI API error');
+      console.error('Grok API error:', errorData);
+      throw new Error(errorData.error?.message || 'Grok API error');
     }
 
     const data = await response.json();
-    console.log('OpenAI response received');
+    console.log('Grok response received');
     
     const solution = data.choices[0].message.content;
 
